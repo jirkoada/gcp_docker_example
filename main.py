@@ -28,3 +28,6 @@ if __name__ == '__main__':
         f"{metrics.classification_report(y_test, predicted)}\n"
     )
 
+    with open('/gcs/mlops_data_bucket_bruh/test.txt', 'w') as f:
+        f.write(f"{metrics.classification_report(y_test, predicted)}\n")
+
