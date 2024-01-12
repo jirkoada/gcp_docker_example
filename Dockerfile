@@ -1,13 +1,17 @@
-FROM python:3.8-slim
+FROM python:3.9-slim
 
-# install python 
-RUN apt update && \
-    apt install --no-install-recommends -y build-essential gcc && \
-    apt clean && rm -rf /var/lib/apt/lists/*
+EXPOSE 8501
 
-COPY requirements.txt requirements.txt
-COPY main.py main.py
-WORKDIR /
-RUN pip install -r requirements.txt --no-cache-dir
+WORKDIR /app
 
-ENTRYPOINT ["python", "-u", "main.py"]
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    software-properties-common \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN git clone https://github.com/streamlit/streamlit-example.git .
+
+RUN pip3 install -r requirements.txt
+
+ENTRYPOINT ["streamlit", "run", "streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]

@@ -1,5 +1,18 @@
 steps:
+# Build the container image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/dtu-mlops-410811/testing', '.']
+  args: ['build', '-t', 'gcr.io/dtu-mlops-410811/streamlit_app:latest', '.']
+# Push the container image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/dtu-mlops-410811/testing']
+  args: ['push', 'gcr.io/dtu-mlops-410811/streamlit_app:latest']
+# Deploy container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+  - 'run'
+  - 'deploy'
+  - 'streamlit_app_exmp'
+  - '--image'
+  - 'gcr.io/dtu-mlops-410811/streamlit_app:latest'
+  - '--region'
+  - 'europe-west3'
